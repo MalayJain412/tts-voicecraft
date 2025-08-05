@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TTS App</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 50px; }
+        input, button { padding: 10px; margin: 10px; width: 300px; }
+    </style>
+</head>
+<body>
+    <h2>🗣️ Text to Speech App</h2>
+    <input type="text" id="text" placeholder="Enter text here" />
+    <br />
+    <button onclick="speak()">Speak</button>
+    <br />
+    <audio id="audio" controls style="margin-top: 20px;"></audio>
+
+    <script>
+        async function speak() {
+            const inputText = document.getElementById("text").value;
+            const response = await fetch("/speak", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            const blob = await response.blob();
+            const audioURL = URL.createObjectURL(blob);
+            const audioElement = document.getElementById("audio");
+            audioElement.src = audioURL;
+            audioElement.play();
+        }
+    </script>
+</body>
+</html>
